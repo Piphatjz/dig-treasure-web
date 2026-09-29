@@ -6,7 +6,7 @@ Loading jaokhun_web from jaokhun_web.apk
     Template Version : 0.9.3
     Python  : 3.12
     CDN URL : https://pygame-web.github.io/cdn/0.9.3/
-    Screen  : 1280x720
+    Screen  : 720x810
     Title   : jaokhun_web
     Folder  : jaokhun_web
     Authors : pgw
@@ -156,9 +156,9 @@ config = {
     cdn : "https://pygame-web.github.io/cdn/0.9.3/",
     autorun : 0,
     PYBUILD : "3.12",
-    fb_ar   :  1.77,
-    fb_width : "1280",
-    fb_height : "720"
+    fb_ar   :  0.8889,
+    fb_width : "720",
+    fb_height : "810"
 }
 
 function show_infobox() {
@@ -224,11 +224,12 @@ function show_infobox() {
             background-color: transparent;
             z-index: 5;
 
-            /* รักษาสัดส่วน 16:9 ของเกม (1280x720) ไม่ให้ยืดบิดเบี้ยว
+            /* สัดส่วนจริงของเกม = 720 x 810 (8:9 แนวตั้ง)
                กว้าง = ค่าที่เล็กกว่าระหว่างความกว้างจอ กับ ความกว้างที่คำนวณจากความสูงจอ
-               ทำให้ได้ letterbox (ขอบดำบน-ล่าง หรือ ซ้าย-ขวา) อัตโนมัติทุกขนาดจอ */
-            width: min(100vw, calc(100vh * 16 / 9)) !important;
-            height: min(100vh, calc(100vw * 9 / 16)) !important;
+               ทำให้ได้ letterbox (ขอบดำซ้าย-ขวา หรือ บน-ล่าง) อัตโนมัติทุกขนาดจอ
+               ป้องกันภาพยืดบิดเบี้ยว */
+            width: min(100vw, calc(100vh * 720 / 810)) !important;
+            height: min(100vh, calc(100vw * 810 / 720)) !important;
 
             padding: 0;
             /* margin:auto + inset:0 = จัดกึ่งกลางจอทั้งแนวตั้งและแนวนอน */
@@ -330,8 +331,8 @@ height="1px"
     </canvas>
 
     <canvas class="emscripten" id="canvas3d"
-width="1280px"
-height="720px"
+width="720px"
+height="810px"
     oncontextmenu="event.preventDefault()" tabindex=1 hidden>
     </canvas>
 
