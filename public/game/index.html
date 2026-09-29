@@ -3196,4 +3196,25 @@ async def main():
 asyncio.run(main())
 
 # --></script></html>
+<style>
+#back-btn {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 9999;
+  background: rgba(30,35,50,0.85);
+  color: #aab;
+  border: 1px solid #334;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-family: sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+#back-btn:hover { background: rgba(50,55,75,0.95); color: #fff; }
+</style>
+<a id="back-btn" href="/" onclick="sessionStorage.removeItem('player_email')">← ออกจากเกม</a>
+
 

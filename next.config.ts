@@ -1,14 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // ให้ iframe โหลด Pygbag game (same-origin, public/game/)
   async headers() {
     return [
       {
-        source: "/game/:path*",
+        // Pygbag/WASM ต้องการ headers เหล่านี้ทุก route
+        source: "/(.*)",
         headers: [
-          { key: "Cross-Origin-Embedder-Policy", value: "require-corp" },
           { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+          { key: "Cross-Origin-Embedder-Policy", value: "require-corp" },
         ],
       },
     ];
