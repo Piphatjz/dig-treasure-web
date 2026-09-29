@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
           { key: "Cross-Origin-Embedder-Policy", value: "credentialless" },
         ],
       },
+      {
+        // เกม build (index.html / .apk / .tar.gz) ห้าม cache
+        // ป้องกัน browser/CDN เสิร์ฟ build เก่าค้างเวลาอัพเดตเกม
+        source: "/game/:path*",
+        headers: [
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+        ],
+      },
     ];
   },
 };
