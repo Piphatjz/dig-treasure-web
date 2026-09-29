@@ -222,13 +222,17 @@ function show_infobox() {
         canvas.emscripten {
             border: 0px none;
             background-color: transparent;
-            width: 100%;
-            height: 100%;
             z-index: 5;
 
-            padding: 0;
-            margin: 0 auto;
+            /* รักษาสัดส่วน 16:9 ของเกม (1280x720) ไม่ให้ยืดบิดเบี้ยว
+               กว้าง = ค่าที่เล็กกว่าระหว่างความกว้างจอ กับ ความกว้างที่คำนวณจากความสูงจอ
+               ทำให้ได้ letterbox (ขอบดำบน-ล่าง หรือ ซ้าย-ขวา) อัตโนมัติทุกขนาดจอ */
+            width: min(100vw, calc(100vh * 16 / 9)) !important;
+            height: min(100vh, calc(100vw * 9 / 16)) !important;
 
+            padding: 0;
+            /* margin:auto + inset:0 = จัดกึ่งกลางจอทั้งแนวตั้งและแนวนอน */
+            margin: auto;
             position: absolute;
             top: 0;
             bottom: 0;
