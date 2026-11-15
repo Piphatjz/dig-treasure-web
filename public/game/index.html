@@ -181,8 +181,7 @@ function show_infobox() {
     <title>Dig & Treasure</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="height=device-height, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes"/>
 
@@ -295,6 +294,61 @@ function show_infobox() {
            top: 150px;
            right: 10px;
            border: 1px solid black;
+        }
+
+        /* ===== Touch controls (แสดงเฉพาะอุปกรณ์สัมผัส) ===== */
+        :root {
+            --tc-size: clamp(44px, 13vmin, 72px);
+            --tc-gap: 6px;
+            --tc-edge: max(10px, env(safe-area-inset-left));
+            --tc-edge-r: max(10px, env(safe-area-inset-right));
+            --tc-edge-b: max(10px, env(safe-area-inset-bottom));
+            --tc-bg: rgba(20, 24, 34, 0.55);
+            --tc-bg-active: rgba(251, 191, 36, 0.55);
+            --tc-border: rgba(205, 214, 229, 0.35);
+            --tc-fg: #cdd6e5;
+            --tc-accent: #fbbf24;
+            --tc-radius: 14px;
+            --tc-font: 13px;
+            --tc-z: 1000001;
+        }
+        html, body { touch-action: none; overscroll-behavior: none; overflow: hidden; height: 100%; }
+        canvas.emscripten { touch-action: none; }
+        #touch-ui, #rotate-hint { display: none; }
+        @media (pointer: coarse) {
+            body.has-touch #touch-ui { display: block; }
+            body.has-touch canvas.emscripten {
+                width: min(100vw, calc(100dvh * 720 / 810)) !important;
+                height: min(100dvh, calc(100vw * 810 / 720)) !important;
+            }
+        }
+        #touch-ui { position: fixed; inset: 0; pointer-events: none; z-index: var(--tc-z);
+            -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; font-family: arial; }
+        .tc-btn { pointer-events: auto; touch-action: none; position: absolute;
+            width: var(--tc-size); height: var(--tc-size); border-radius: var(--tc-radius);
+            background: var(--tc-bg); border: 1px solid var(--tc-border); color: var(--tc-fg);
+            font-size: var(--tc-font); font-weight: bold; display: flex; align-items: center; justify-content: center;
+            text-align: center; line-height: 1.1; box-sizing: border-box; padding: 0; }
+        .tc-btn.on { background: var(--tc-bg-active); color: #0a0c12; }
+        .tc-arrow { font-size: calc(var(--tc-font) * 1.8); }
+        #tc-dpad { position: absolute; left: var(--tc-edge); bottom: var(--tc-edge-b);
+            width: calc(var(--tc-size) * 3 + var(--tc-gap) * 2); height: calc(var(--tc-size) * 3 + var(--tc-gap) * 2); }
+        #tc-up    { left: calc(var(--tc-size) + var(--tc-gap)); top: 0; }
+        #tc-down  { left: calc(var(--tc-size) + var(--tc-gap)); bottom: 0; }
+        #tc-left  { left: 0; top: calc(var(--tc-size) + var(--tc-gap)); }
+        #tc-right { right: 0; top: calc(var(--tc-size) + var(--tc-gap)); }
+        #tc-actions { position: absolute; right: var(--tc-edge-r); bottom: var(--tc-edge-b);
+            width: calc(var(--tc-size) * 2 + var(--tc-gap)); height: calc(var(--tc-size) * 3 + var(--tc-gap) * 2); }
+        #tc-slam  { right: 0; bottom: 0; width: calc(var(--tc-size) * 2 + var(--tc-gap)); color: var(--tc-accent); }
+        #tc-shop  { right: 0; bottom: calc(var(--tc-size) + var(--tc-gap)); }
+        #tc-enter { left: 0; bottom: calc(var(--tc-size) + var(--tc-gap)); }
+        #tc-esc   { right: 0; top: 0; }
+        #tc-help  { left: 0; top: 0; }
+        #rotate-hint { position: fixed; inset: 0; z-index: calc(var(--tc-z) + 1); background: rgba(10, 12, 18, 0.92);
+            color: var(--tc-accent); font-weight: bold; font-size: 18px; align-items: center; justify-content: center;
+            text-align: center; padding: 24px; pointer-events: none; }
+        @media (pointer: coarse) and (orientation: portrait) {
+            body.has-touch #rotate-hint { display: flex; }
         }
     </style>
 
@@ -465,6 +519,90 @@ frameborder="1"
         window.frames["iframe"].location = url;
     }
 
+    </script>
+
+    <div id="touch-ui" aria-hidden="true">
+        <div id="tc-dpad">
+            <button class="tc-btn tc-arrow" id="tc-up"    data-key="ArrowUp">▲</button>
+            <button class="tc-btn tc-arrow" id="tc-left"  data-key="ArrowLeft">◀</button>
+            <button class="tc-btn tc-arrow" id="tc-right" data-key="ArrowRight">▶</button>
+            <button class="tc-btn tc-arrow" id="tc-down"  data-key="ArrowDown">▼</button>
+        </div>
+        <div id="tc-actions">
+            <button class="tc-btn" id="tc-help"  data-key="h">วิธี<br>เล่น</button>
+            <button class="tc-btn" id="tc-esc"   data-key="Escape">ปิด<br>Esc</button>
+            <button class="tc-btn" id="tc-enter" data-key="Enter">ยืนยัน</button>
+            <button class="tc-btn" id="tc-shop"  data-key="e">ร้าน<br>E</button>
+            <button class="tc-btn" id="tc-slam"  data-key="Shift">SLAM ⇩</button>
+        </div>
+    </div>
+    <div id="rotate-hint">หมุนโทรศัพท์เป็นแนวนอนเพื่อเล่น<br>(แตะปุ่มลูกศรเพื่อเดิน/เจาะ, SLAM = Gravity Slam)</div>
+
+    <script type="application/javascript">
+    (function () {
+        // คีย์ที่เกมใช้จริง (game.py): ลูกศร=เดิน/บิน/เจาะ, Shift=Gravity Slam, E=ร้าน, Enter, Esc, H=วิธีเล่น
+        const KEYS = {
+            ArrowUp:    { code: "ArrowUp",    keyCode: 38 },
+            ArrowDown:  { code: "ArrowDown",  keyCode: 40 },
+            ArrowLeft:  { code: "ArrowLeft",  keyCode: 37 },
+            ArrowRight: { code: "ArrowRight", keyCode: 39 },
+            Shift:      { code: "ShiftLeft",  keyCode: 16, location: 1 },
+            e:          { code: "KeyE",       keyCode: 69 },
+            h:          { code: "KeyH",       keyCode: 72 },
+            Enter:      { code: "Enter",      keyCode: 13 },
+            Escape:     { code: "Escape",     keyCode: 27 },
+        };
+        const isTouch = ("ontouchstart" in window) || navigator.maxTouchPoints > 0;
+        if (isTouch) document.body.classList.add("has-touch");
+
+        function send(type, key) {
+            const k = KEYS[key];
+            const ev = new KeyboardEvent(type, { key: key, code: k.code, location: k.location || 0,
+                shiftKey: key === "Shift" && type === "keydown", bubbles: true, cancelable: true });
+            // Chrome/Safari ไม่รับ keyCode/which ผ่าน constructor — กำหนดเองให้ SDL อ่านได้
+            Object.defineProperty(ev, "keyCode", { get: () => k.keyCode });
+            Object.defineProperty(ev, "which", { get: () => k.keyCode });
+            Object.defineProperty(ev, "charCode", { get: () => 0 });
+            // SDL2 (emscripten) ฟังคีย์บอร์ดที่ window เป็นค่าเริ่มต้น; dispatch ที่ canvas แล้ว bubble ขึ้นถึง document/window
+            (document.getElementById("canvas") || window).dispatchEvent(ev);
+        }
+
+        const held = new Map(); // touch identifier -> key
+        function down(btn, id) {
+            const key = btn.dataset.key;
+            held.set(id, { key, btn });
+            btn.classList.add("on");
+            // นับจำนวนนิ้วที่กดคีย์เดียวกันอยู่ ส่ง keydown แค่ครั้งแรก
+            let n = 0; held.forEach(v => { if (v.key === key) n++; });
+            if (n === 1) send("keydown", key);
+        }
+        function up(id) {
+            const h = held.get(id); if (!h) return;
+            held.delete(id);
+            let n = 0; held.forEach(v => { if (v.key === h.key) n++; });
+            if (n === 0) { h.btn.classList.remove("on"); send("keyup", h.key); }
+        }
+
+        document.querySelectorAll("#touch-ui .tc-btn").forEach(btn => {
+            btn.addEventListener("touchstart", e => {
+                e.preventDefault(); e.stopPropagation();
+                for (const t of e.changedTouches) down(btn, t.identifier);
+            }, { passive: false });
+            const end = e => { e.preventDefault(); e.stopPropagation(); for (const t of e.changedTouches) up(t.identifier); };
+            btn.addEventListener("touchend", end, { passive: false });
+            btn.addEventListener("touchcancel", end, { passive: false });
+            // fallback เมาส์ (ทดสอบบนเดสก์ท็อป)
+            btn.addEventListener("mousedown", e => { e.preventDefault(); down(btn, "m"); });
+            btn.addEventListener("contextmenu", e => e.preventDefault());
+        });
+        window.addEventListener("mouseup", () => up("m"));
+        // ปล่อยทุกปุ่มเมื่อสลับแอป/หมุนจอ กันรถวิ่งค้าง
+        const releaseAll = () => [...held.keys()].forEach(up);
+        window.addEventListener("blur", releaseAll);
+        document.addEventListener("visibilitychange", releaseAll);
+        window.addEventListener("orientationchange", () => { releaseAll(); setTimeout(() => window.window_resize && window.window_resize(), 300); });
+        window.__touchSend = send; // สำหรับ debug
+    })();
     </script>
 
 </body>
