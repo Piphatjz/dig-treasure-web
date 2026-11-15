@@ -1099,6 +1099,13 @@ if not aio.cross.simulator:
                 PyConfig.pkg_indexes.append(redirect)
 
             print("807: DEV MODE ON", PyConfig.pkg_indexes)
+
+        if True:
+            # dig-treasure-web: ให้ aio.pep0723 ดึง index แพ็กเกจและ wheel (เช่น pygame_ce)
+            # จาก /pgcdn/ บนเว็บเดียวกัน แทน pygame-web.github.io ที่ช้า
+            # (ไฟล์ที่ไม่ได้ mirror ไว้ next.config.ts จะ rewrite ไป CDN ต้นทางให้)
+            import os
+            os.environ["PYGPI"] = str(platform.window.location.origin) + "/pgcdn/"
         # now in pep0723
         #        else:
         #            # address cdn

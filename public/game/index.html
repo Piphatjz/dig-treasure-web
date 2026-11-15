@@ -307,8 +307,16 @@ function show_infobox() {
 */
     </script>
 
-    <script src="/pgcdn/0.9.3//browserfs.min.js"></script>
+    <!-- browserfs.min.js ถูกถอดออก: ไม่มีไฟล์นี้ใน CDN 0.9.3 (404) และเป็น script แบบ blocking -->
 
+    <!-- เริ่มโหลดไฟล์ที่ pythons.js จะ import ทีละไฟล์ (sequential) ให้มาพร้อมกันตั้งแต่ต้น -->
+    <link rel="modulepreload" href="/pgcdn/vtx.js">
+    <link rel="modulepreload" href="/pgcdn/vt/xterm.js">
+    <link rel="modulepreload" href="/pgcdn/vt/xterm-addon-image.js">
+    <link rel="preload" href="/pgcdn/vt/xterm.css" as="style">
+    <!-- wheel ของ pygame-ce (1.5MB) ถูกดึงหลังแตก tar.gz — prefetch ไว้ให้อยู่ใน cache ก่อน -->
+    <link rel="prefetch" href="/pgcdn/index-0.9.3-cp312.json">
+    <link rel="prefetch" href="/pgcdn/cp312/pygame_ce-2.5.7-cp312-cp312-wasm32_bi_emscripten.whl">
 </head>
 
 <body>
@@ -379,7 +387,7 @@ frameborder="1"
                 mozallowfullscreen="true"
                 sandbox="allow-same-origin allow-top-navigation allow-scripts allow-pointer-lock"
                 allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; accelerometer; xr; cross-origin-isolated"
-                src="https://pygame-web.github.io/cdn/0.9.3/empty.html"
+                src="/pgcdn/0.9.3/empty.html"
                 scrolling="yes">
             </iframe>
         </div>

@@ -4,6 +4,12 @@ const PREFETCH = [
   "/pgcdn/0.9.3/cpython312/main.js",
   "/pgcdn/0.9.3/cpython312/main.wasm",
   "/pgcdn/0.9.3/cpython312/main.data",
+  "/pgcdn/0.9.3/cpythonrc.py",
+  "/pgcdn/vtx.js",
+  "/pgcdn/vt/xterm.js",
+  "/pgcdn/vt/xterm-addon-image.js",
+  "/pgcdn/index-0.9.3-cp312.json",
+  "/pgcdn/cp312/pygame_ce-2.5.7-cp312-cp312-wasm32_bi_emscripten.whl",
 ];
 
 export default function HomePage() {
