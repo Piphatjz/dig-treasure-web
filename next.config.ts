@@ -21,7 +21,33 @@ const nextConfig: NextConfig = {
           { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
         ],
       },
+      {
+        // ไฟล์ runtime ของ Pygbag (Python WASM ~20MB) โฮสต์เองบน Vercel แทน GitHub Pages ที่ช้า
+        // เวอร์ชันอยู่ใน path แล้ว จึง cache ได้ถาวร — โหลดครั้งที่สองแทบไม่ต้องดาวน์โหลดใหม่
+        source: "/pgcdn/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        // main.data (6.6MB) ถูกเสิร์ฟเป็น application/octet-stream ซึ่ง CDN ไม่บีบอัดให้
+        // ตั้งเป็น application/wasm (ประเภทที่บีบอัดได้) เพื่อให้ได้ gzip/brotli (~4.5MB)
+        // emscripten โหลดไฟล์นี้เป็น ArrayBuffer จึงไม่สนใจ Content-Type
+        source: "/pgcdn/0.9.3/cpython312/main.data",
+        headers: [{ key: "Content-Type", value: "application/wasm" }],
+      },
     ];
+  },
+  async rewrites() {
+    return {
+      // ไฟล์ CDN ที่ไม่ได้ copy มาไว้ใน public/pgcdn ให้ดึงจาก pygame-web ต้นทาง
+      fallback: [
+        {
+          source: "/pgcdn/:path*",
+          destination: "https://pygame-web.github.io/cdn/:path*",
+        },
+      ],
+    };
   },
 };
 

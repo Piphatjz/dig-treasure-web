@@ -1,37 +1,24 @@
-"use client";
+// ไฟล์ใหญ่ที่เกมต้องใช้ — ให้เบราว์เซอร์เริ่มโหลดล่วงหน้าตั้งแต่หน้าแรก
+const PREFETCH = [
+  "/pgcdn/0.9.3/pythons.js",
+  "/pgcdn/0.9.3/cpython312/main.js",
+  "/pgcdn/0.9.3/cpython312/main.wasm",
+  "/pgcdn/0.9.3/cpython312/main.data",
+  "/pgcdn/0.9.3/cpythonrc.py",
+  "/pgcdn/vtx.js",
+  "/pgcdn/vt/xterm.js",
+  "/pgcdn/vt/xterm-addon-image.js",
+  "/pgcdn/index-0.9.3-cp312.json",
+  "/pgcdn/cp312/pygame_ce-2.5.7-cp312-cp312-wasm32_bi_emscripten.whl",
+];
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
-const CHULA_REGEX = /^[a-zA-Z0-9._%+\-]+@student\.chula\.ac\.th$/;
-
-export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const trimmed = email.trim().toLowerCase();
-
-    if (!trimmed) {
-      setError("กรุณากรอกอีเมลก่อน");
-      return;
-    }
-    if (!CHULA_REGEX.test(trimmed)) {
-      setError("อีเมลต้องลงท้ายด้วย @student.chula.ac.th เท่านั้น");
-      return;
-    }
-
-    setLoading(true);
-    // เก็บ email ไว้ใน sessionStorage เพื่อแสดงในหน้าเกม
-    sessionStorage.setItem("player_email", trimmed);
-    router.push("/game");
-  }
-
+export default function HomePage() {
   return (
     <main className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
+      {PREFETCH.map((href) => (
+        <link key={href} rel="prefetch" href={href} />
+      ))}
+
       {/* Animated gem blobs in background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-yellow-500/10 rounded-full blur-3xl animate-pulse" />
@@ -40,9 +27,7 @@ export default function LoginPage() {
       </div>
 
       <div className="relative w-full max-w-md">
-        {/* Card */}
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl">
-          {/* Title */}
           <div className="text-center mb-8">
             <div className="text-5xl mb-3">⛏️</div>
             <h1 className="text-3xl font-bold text-yellow-400 tracking-tight">
@@ -54,54 +39,19 @@ export default function LoginPage() {
             <div className="mt-4 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent" />
           </div>
 
-          {/* Login form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm text-gray-400 mb-2">
-                เข้าสู่ระบบด้วยอีเมล Chula
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setError("");
-                }}
-                placeholder="student@student.chula.ac.th"
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                autoFocus
-                autoComplete="email"
-              />
-            </div>
-
-            {error && (
-              <p className="text-red-400 text-sm flex items-center gap-2">
-                <span>⚠</span> {error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-green-600 hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2"
-            >
-              {loading ? (
-                <>
-                  <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  กำลังเข้าสู่ระบบ...
-                </>
-              ) : (
-                "▶  เริ่มเล่นเกม"
-              )}
-            </button>
-          </form>
+          {/* ใช้ <a> ธรรมดา: หน้าเกมเป็น static HTML ของ Pygbag ต้องโหลดเป็น top-level document */}
+          <a
+            href="/game/index.html"
+            className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2"
+          >
+            ▶  เริ่มเล่นเกม
+          </a>
 
           <p className="text-center text-gray-600 text-xs mt-6">
-            ต้องใช้อีเมล @student.chula.ac.th เท่านั้น
+            ครั้งแรกอาจใช้เวลาโหลดสักครู่ ครั้งถัดไปจะเร็วขึ้น
           </p>
         </div>
 
-        {/* Footer */}
         <p className="text-center text-gray-700 text-xs mt-4">
           Dig &amp; Treasure · Midterm Project · Chulalongkorn University
         </p>
