@@ -42,13 +42,16 @@ export default function HomePage() {
           {/* ใช้ <a> ธรรมดา: หน้าเกมเป็น static HTML ของ Pygbag ต้องโหลดเป็น top-level document */}
           <a
             href="/game/index.html"
-            className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2"
+            className="w-full min-h-12 bg-green-600 hover:bg-green-500 text-white font-semibold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2"
           >
             ▶  เริ่มเล่นเกม
           </a>
 
           <p className="text-center text-gray-600 text-xs mt-6">
             ครั้งแรกอาจใช้เวลาโหลดสักครู่ ครั้งถัดไปจะเร็วขึ้น
+          </p>
+          <p className="text-center text-gray-500 text-xs mt-2">
+            เล่นบนมือถือได้: หมุนจอเป็นแนวนอน แล้วใช้ปุ่มบนจอ
           </p>
         </div>
 
